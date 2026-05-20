@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Production Case Study: B2B Lead Accelerator Studio</title>
+    
+    <!-- Google Fonts: Outfit (headings) & Plus Jakarta Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Modern Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-base: #06070d;
+            --bg-surface: rgba(13, 17, 30, 0.45);
+            --border-glow: rgba(255, 255, 255, 0.08);
+            --primary: #ff007f;
+            --accent-purple: #8a2be2;
+            --accent-cyan: #00d2ff;
+            --text-main: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --glow-primary: rgba(255, 0, 127, 0.15);
+            --glow-purple: rgba(138, 43, 226, 0.15);
+            --glow-cyan: rgba(0, 210, 255, 0.15);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Background Glowing Orbs */
+        .ambient-glow {
+            position: fixed;
+            width: 60vw;
+            height: 60vw;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            filter: blur(120px);
+            opacity: 0.4;
+        }
+
+        .glow-1 {
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, var(--accent-purple) 0%, transparent 70%);
+        }
+
+        .glow-2 {
+            bottom: -10%;
+            right: -10%;
+            background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
+        }
+
+        .glow-3 {
+            top: 40%;
+            left: 30%;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 60%);
+            width: 40vw;
+            height: 40vw;
+            opacity: 0.15;
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 48px;
+        }
+
+        /* Premium Sticky Sidebar Navigation */
+        aside {
+            position: sticky;
+            top: 40px;
+            height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .sidebar-brand i {
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(255, 0, 127, 0.5));
+        }
+
+        .sidebar-brand span {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .sidebar-nav a.active i {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .sidebar-nav i {
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .sidebar-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Content Section */
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 64px;
+        }
+
+        /* Glassmorphic Cards Styling */
+        .glass-card {
+            background: var(--bg-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(138, 43, 226, 0.3);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 30px -10px var(--glow-purple);
+        }
+
+        /* Hero / Header Section */
+        .hero-section {
+            padding: 48px 0 24px 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(255, 0, 127, 0.1);
+            border: 1px solid rgba(255, 0, 127, 0.25);
+            border-radius: 100px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.15);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 48px;
+            line-height: 1.15;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 20%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin-bottom: 32px;
+        }
+
+        /* Tech Tag Row */
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tech-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tech-tag i {
+            font-size: 14px;
+        }
+
+        .tech-tag.nextjs i { color: #fff; }
+        .tech-tag.fastapi i { color: #05998b; }
+        .tech-tag.gcp i { color: #4285f4; }
+        .tech-tag.langgraph i { color: #ff8c00; }
+
+        /* Typography & Section Anchors */
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h2 i {
+            color: var(--accent-cyan);
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        p strong {
+            color: #fff;
+        }
+
+        /* Callouts / Warnings styling */
+        .disclaimer-box {
+            background: rgba(138, 43, 226, 0.05);
+            border-left: 4px solid var(--accent-purple);
+            padding: 24px;
+            border-radius: 0 16px 16px 0;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .disclaimer-box h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .disclaimer-box h4 i {
+            color: var(--accent-purple);
+        }
+
+        .disclaimer-box p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Custom Architecture SVG Box */
+        .architecture-wrapper {
+            margin: 32px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .network-graphic {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .network-node {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 16px 20px;
+            text-align: center;
+            min-width: 160px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .network-node:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 210, 255, 0.03);
+            box-shadow: 0 0 15px var(--glow-cyan);
+        }
+
+        .network-node i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--accent-cyan);
+        }
+
+        .network-node.highlight {
+            border-color: var(--primary);
+            background: rgba(255, 0, 127, 0.03);
+        }
+
+        .network-node.highlight i {
+            color: var(--primary);
+        }
+
+        .network-node h5 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .network-node span {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal Flow Step UI */
+        .step-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-card:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(255, 255, 255, 0.03);
+            transform: translateY(-2px);
+        }
+
+        .step-num {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 32px;
+            color: rgba(255, 255, 255, 0.03);
+            transition: color 0.3s ease;
+        }
+
+        .step-card:hover .step-num {
+            color: rgba(0, 210, 255, 0.1);
+        }
+
+        .step-card i {
+            font-size: 20px;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+        }
+
+        .step-card h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Engineering Grid */
+        .engineering-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .challenge-box {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 32px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .challenge-box:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .challenge-meta h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .challenge-meta .label {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .challenge-meta .label.timeout {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .challenge-meta .label.reliability {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .challenge-meta .label.guardrail {
+            background: rgba(241, 196, 15, 0.1);
+            border: 1px solid rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+        }
+
+        .challenge-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .challenge-content p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .solution-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px 20px;
+        }
+
+        .solution-card h5 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            color: var(--accent-cyan);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .solution-card p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        /* Large Takeaway Pitch Section */
+        .pitch-banner {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(255, 0, 127, 0.05) 100%);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .pitch-content h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .pitch-content p {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .pitch-bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pitch-bullets li {
+            font-size: 13px;
+            color: var(--text-main);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .pitch-bullets li i {
+            color: var(--accent-cyan);
+            margin-top: 3px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            aside {
+                position: relative;
+                top: 0;
+                height: auto;
+                margin-bottom: 24px;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+            .sidebar-nav a {
+                white-space: nowrap;
+            }
+            .sidebar-footer {
+                display: none;
+            }
+            .pitch-banner {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+            .challenge-box {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .glass-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Neon Glowing Orbs -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div class="container">
+        
+        <!-- Sticky Sidebar Navigation -->
+        <aside>
+            <div>
+                <div class="sidebar-brand">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>ACCELERATOR.IO</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="#overview" class="active"><i class="fa-solid fa-rocket"></i> Overview</a></li>
+                    <li><a href="#architecture"><i class="fa-solid fa-network-wired"></i> Architecture</a></li>
+                    <li><a href="#lifecycle"><i class="fa-solid fa-circle-nodes"></i> Stateful Loop</a></li>
+                    <li><a href="#engineering"><i class="fa-solid fa-sliders"></i> Tech Hurdles</a></li>
+                    <li><a href="#value"><i class="fa-solid fa-lightbulb"></i> Business Value</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                <span>Repository Demo</span>
+                <a href="https://github.com/AICODER009/Lead-Accelerator.git" target="_blank">
+                    <i class="fa-brands fa-github"></i> AICODER009/Lead-Accelerator
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Body -->
+        <main>
+            
+            <!-- Hero / Header Component -->
+            <section id="overview" class="hero-section">
+                <span class="badge"><i class="fa-solid fa-fire"></i> Enterprise Case Study</span>
+                <h1>Stateful Multi-Agent<br><span class="gradient-text">B2B Lead Accelerator</span></h1>
+                <p class="hero-desc">
+                    A highly optimized, serverless agentic framework hosted on Google Cloud Run utilizing decoupled Next.js interfaces and LangGraph workflow orchestration to automate deep B2B personalization and objection handling.
+                </p>
+                
+                <div class="tech-tags">
+                    <div class="tech-tag langgraph"><i class="fa-solid fa-diagram-project"></i> LangGraph</div>
+                    <div class="tech-tag nextjs"><i class="fa-brands fa-react"></i> Next.js App</div>
+                    <div class="tech-tag fastapi"><i class="fa-solid fa-server"></i> FastAPI ASGI</div>
+                    <div class="tech-tag gcp"><i class="fa-brands fa-google-cloud"></i> GCP Cloud Run</div>
+                </div>
+            </section>
+
+            <!-- Project Context Card -->
+            <div class="glass-card">
+                <h2><i class="fa-solid fa-circle-info"></i> Project Context</h2>
+                <div class="disclaimer-box">
+                    <h4><i class="fa-solid fa-shield-halved"></i> Proprietary IP Disclosure</h4>
+                    <p>
+                        This repository houses a **lightweight, fully functional developer demo** of the platform. The complete enterprise production build contains proprietary corporate integrations, customer CRM webhooks, and private VPC security networks. By packaging the stateful LangGraph engine and local A2A FastAPI microservices in this demo, I demonstrate the system's operational mechanics without exposing restricted business code.
+                    </p>
+                </div>
+                <p>
+                    Outbound outbound sales development (SDR) campaigns are notoriously resource-intensive. Generic templates fall flat, while manual research takes hours per account. I engineered this system to automate the entire lifecycle—scaling search, grounding value hooks, and stress-testing outbound copy before it is ever sent to a prospect.
+                </p>
+            </div>
+
+            <!-- Decoupled Production Architecture Card -->
+            <section id="architecture" class="glass-card">
+                <h2><i class="fa-solid fa-network-wired"></i> Decoupled Serverless Architecture</h2>
+                <p>
+                    In production, the application is architected as a high-concurrency, serverless multi-container stack deployed using **Google Cloud Run** and Vercel. 
+                </p>
+
+                <div class="architecture-wrapper">
+                    <div class="network-graphic">
+                        <div class="network-node highlight">
+                            <i class="fa-brands fa-react"></i>
+                            <h5>Next.js App</h5>
+                            <span>Dashboard & Console</span>
+                        </div>
+                        <div class="network-node">
+                            <i class="fa-solid fa-bolt"></i>
+                            <h5>FastAPI API</h5>
+                            <span>LangGraph Orchestrator</span>
+                        </div>
+                        <div class="network-node">
+                            <i class="fa-solid fa-circle-nodes"></i>
+                            <h5>CrewAI Engine</h5>
+                            <span>Research Partner</span>
+                        </div>
+                        <div class="network-node">
+                            <i class="fa-solid fa-database"></i>
+                            <h5>PostgreSQL</h5>
+                            <span>Cloud SQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    By isolating our core orchestrator from individual agent tasks, I created a decoupled architecture where heavy computations (like web research and adversarial simulations) operate as separate microservices. The services scale to zero when idle, keeping cloud resource footprints and overall compute costs minimal.
+                </p>
+            </section>
+
+            <!-- Stateful Outbound Loop Card -->
+            <section id="lifecycle" class="glass-card">
+                <h2><i class="fa-solid fa-circle-nodes"></i> The Stateful Outbound Lifecycle</h2>
+                <p>
+                    The Campaign graph transitions statefully through 5 logical nodes, utilizing persistent checkpoint transactions to ensure the workflow is completely recoverable.
+                </p>
+
+                <div class="step-container">
+                    <div class="step-card">
+                        <span class="step-num">01</span>
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <h4>Lead Researcher</h4>
+                        <p>Ingests campaign parameters and automatically compiles prospect ICP targets and descriptions.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-num">02</span>
+                        <i class="fa-solid fa-user-check"></i>
+                        <h4>Human Approval Gate</h4>
+                        <p>Pauses execution, serializes system state, and waits for a manager's override on the dashboard.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-num">03</span>
+                        <i class="fa-solid fa-pen-nib"></i>
+                        <h4>SDR Personalizer</h4>
+                        <p>Calls CrewAI tools to conduct semantic web searches and draft deeply grounded outbound pitches.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-num">04</span>
+                        <i class="fa-solid fa-comments"></i>
+                        <h4>Objection Simulator</h4>
+                        <p>Runs dual-LLM adversarial loops, playing the role of a skeptical prospect to stress-test email copy.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-num">05</span>
+                        <i class="fa-solid fa-chart-line"></i>
+                        <h4>CRM Coach</h4>
+                        <p>Grades response resiliency. Automatically loops back to personalization if score is subpar.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Engineering Hurdles Card -->
+            <section id="engineering" class="glass-card">
+                <h2><i class="fa-solid fa-sliders"></i> Enterprise Engineering Hurdles Resolved</h2>
+                <p>
+                    Developing an enterprise-grade agent workflow required solving deep operational and network constraints:
+                </p>
+
+                <div class="engineering-grid">
+                    
+                    <div class="challenge-box">
+                        <div class="challenge-meta">
+                            <h4>Asynchronous Task Scaling</h4>
+                            <span class="label timeout">Timeouts</span>
+                        </div>
+                        <div class="challenge-content">
+                            <p>
+                                Running intensive multi-agent web scraping and research loops synchronously over HTTP resulted in server timeouts during heavy traffic periods.
+                            </p>
+                            <div class="solution-card">
+                                <h5><i class="fa-solid fa-circle-check"></i> Resolution</h5>
+                                <p>
+                                    Decoupled execution by implementing a **GCP Pub/Sub task queue**. The personalization node posts jobs, transitions to a suspended state, and frees the gateway. A background worker container processes the research, updating the state once completed.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="challenge-box">
+                        <div class="challenge-meta">
+                            <h4>Bulletproof Session State</h4>
+                            <span class="label reliability">Fault Tolerance</span>
+                        </div>
+                        <div class="challenge-content">
+                            <p>
+                                With serverless instances scaling up and down, campaigns faced risk of data loss mid-workflow if an active container was terminated, resulting in wasted API spend.
+                            </p>
+                            <div class="solution-card">
+                                <h5><i class="fa-solid fa-circle-check"></i> Resolution</h5>
+                                <p>
+                                    Configured a highly resilient **PostgreSQL Cloud SQL checkpointer**. Because every node step transition is executed as a database transaction, an interrupted container simply reads the state history from SQL on wake and resumes immediately.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="challenge-box">
+                        <div class="challenge-meta">
+                            <h4>Real-Time Inline Guardrails</h4>
+                            <span class="label guardrail">Quality Checks</span>
+                        </div>
+                        <div class="challenge-content">
+                            <p>
+                                Relying solely on raw LLM prompts poses risk of hallucinating company statistics or fabricating metrics not supported by the client’s internal case studies.
+                            </p>
+                            <div class="solution-card">
+                                <h5><i class="fa-solid fa-circle-check"></i> Resolution</h5>
+                                <p>
+                                    Engineered an **automated in-line validation filter** directly into the SDR compilation node. Using **DeepEval**, the system grades generated copy for **Faithfulness** against source text, blocking and re-routing any copy scoring below $0.85$.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Product Value & Interview Pitch Card -->
+            <section id="value" class="pitch-banner">
+                <div class="pitch-content">
+                    <h3>💡 Value For an AI-First Product Direction</h3>
+                    <p>
+                        This project demonstrates a thorough understanding of what it takes to shift AI prototypes into robust, production-ready enterprise systems:
+                    </p>
+                </div>
+                <ul class="pitch-bullets">
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span><strong>State Graphs Over Chains</strong>: LangGraph structures complex, predictable self-correcting logic.</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span><strong>Decoupled Sockets</strong>: Isolating microservices reduces server load and keeps compute highly optimized.</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span><strong>Human Oversight Gates</strong>: Database checkpointers guarantee brand control without slowing campaigns.</span>
+                    </li>
+                </ul>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Active Section Styling Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section, .glass-card[id]');
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
