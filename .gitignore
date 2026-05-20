@@ -1,0 +1,39 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Credentials & Secrets (CRITICAL: Do NOT push keys to GitHub!)
+.env
+.env.*
+!.env.example
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases & Checkpoints
+data/checkpoints.db
+data/checkpoints.db-journal
+*.db
+*.sqlite
+
+# Testing & Evaluation Caches
+.pytest_cache/
+.deepeval/
+.pytest/
+htmlcov/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
