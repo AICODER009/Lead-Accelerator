@@ -475,41 +475,76 @@
             line-height: 1.5;
         }
 
-        /* Page Break Prevention for PDF Printing */
+        /* Page Break Prevention & Premium Styling for PDF Printing */
         @media print {
             body {
-                background-color: #fff;
-                color: #000;
-                padding: 0;
+                background-color: #06070d !important;
+                color: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                padding: 0 !important;
             }
             .ambient-glow {
-                display: none;
+                display: block !important;
+                opacity: 0.15 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .glass-card {
-                background: #fff;
-                border: 1px solid #ddd;
-                color: #000;
+                background: rgba(13, 17, 30, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                color: #f1f5f9 !important;
                 page-break-inside: avoid;
-                box-shadow: none !important;
-                margin-bottom: 20px;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
-            h1, h2, h3, h4, h5, p, span, strong, li {
-                color: #000 !important;
-                background: none !important;
-                -webkit-text-fill-color: initial !important;
+            h1 {
+                background: linear-gradient(135deg, #fff 30%, #94a3b8 100%) !important;
+                -webkit-background-clip: text !important;
+                -webkit-text-fill-color: transparent !important;
+                color: #fff !important;
             }
-            .tech-tag, .solution-card, .network-node, .step-card, .challenge-box, .skill-card, .roadmap-card {
-                background: #f9f9f9 !important;
-                border: 1px solid #ddd !important;
-                color: #000 !important;
+            h2 {
+                color: #fff !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+            .gradient-text {
+                background: linear-gradient(135deg, var(--primary), var(--accent-purple), var(--accent-cyan)) !important;
+                -webkit-background-clip: text !important;
+                -webkit-text-fill-color: transparent !important;
+            }
+            .tech-tag {
+                background: rgba(255, 255, 255, 0.02) !important;
+                border: 1px solid rgba(255, 255, 255, 0.05) !important;
+                color: var(--text-main) !important;
                 page-break-inside: avoid;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .solution-card, .network-node, .step-card, .challenge-box, .skill-card, .roadmap-card {
+                background: rgba(255, 255, 255, 0.015) !important;
+                border: 1px solid rgba(255, 255, 255, 0.06) !important;
+                color: var(--text-main) !important;
+                page-break-inside: avoid;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .badge {
-                border: 1px solid #000 !important;
-                color: #000 !important;
+                background: rgba(255, 0, 127, 0.1) !important;
+                border: 1px solid rgba(255, 0, 127, 0.25) !important;
+                color: var(--primary) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .network-node i, .step-card i, .skill-card h4 i, .roadmap-card h4 i {
-                color: #000 !important;
+                color: var(--accent-cyan) !important;
+            }
+            .pitch-banner {
+                background: linear-gradient(135deg, rgba(138, 43, 226, 0.08) 0%, rgba(255, 0, 127, 0.04) 100%) !important;
+                border: 1px solid rgba(138, 43, 226, 0.15) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                page-break-inside: avoid;
             }
         }
 
@@ -688,33 +723,33 @@
                 <div class="skill-card">
                     <h4><i class="fa-solid fa-magnifying-glass"></i> Lead Finder</h4>
                     <ul>
-                        <li><li><i class="fa-solid fa-circle"></i> Web Search (Google, Tavily)</li></li>
-                        <li><li><i class="fa-solid fa-circle"></i> LinkedIn ICP Scrapers</li></li>
-                        <li><li><i class="fa-solid fa-circle"></i> Contact Verification</li></li>
+                        <li><i class="fa-solid fa-circle"></i> Web Search (Google, Tavily)</li>
+                        <li><i class="fa-solid fa-circle"></i> LinkedIn ICP Scrapers</li>
+                        <li><i class="fa-solid fa-circle"></i> Contact Verification</li>
                     </ul>
                 </div>
                 <div class="skill-card">
                     <h4><i class="fa-solid fa-pen-nib"></i> Personalizer</h4>
                     <ul>
-                        <li><li><i class="fa-solid fa-circle"></i> Case Study Synthesis</li></li>
-                        <li><li><i class="fa-solid fa-circle"></i> Vector Playbook Grounding</li></li>
-                        <li><li><i class="fa-solid fa-circle"></i> Multi-Hook Synthesis</li></li>
+                        <li><i class="fa-solid fa-circle"></i> Case Study Synthesis</li>
+                        <li><i class="fa-solid fa-circle"></i> Vector Playbook Grounding</li>
+                        <li><i class="fa-solid fa-circle"></i> Multi-Hook Synthesis</li>
                     </ul>
                 </div>
                 <div class="skill-card">
                     <h4><i class="fa-solid fa-comments"></i> Objection Sim</h4>
                     <ul>
-                        <li><li><i class="fa-solid fa-circle"></i> adversarial critic Roleplay</li></li>
-                        <li><li><i class="fa-solid fa-circle"></i> Friction Modeling</li></li>
-                        <li><li><i class="fa-solid fa-circle"></i> Skeptical Persona Generator</li></li>
+                        <li><i class="fa-solid fa-circle"></i> adversarial critic Roleplay</li>
+                        <li><i class="fa-solid fa-circle"></i> Friction Modeling</li>
+                        <li><i class="fa-solid fa-circle"></i> Skeptical Persona Generator</li>
                     </ul>
                 </div>
                 <div class="skill-card">
                     <h4><i class="fa-solid fa-chart-bar"></i> CRM Coach</h4>
                     <ul>
-                        <li><li><i class="fa-solid fa-circle"></i> DeepEval G-Eval Grades</li></li>
-                        <li><li><i class="fa-solid fa-circle"></i> Feedback Loop Synthesizer</li></li>
-                        <li><li><i class="fa-solid fa-circle"></i> State checkpointer Writer</li></li>
+                        <li><i class="fa-solid fa-circle"></i> DeepEval G-Eval Grades</li>
+                        <li><i class="fa-solid fa-circle"></i> Feedback Loop Synthesizer</li>
+                        <li><i class="fa-solid fa-circle"></i> State checkpointer Writer</li>
                     </ul>
                 </div>
             </div>
