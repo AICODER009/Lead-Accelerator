@@ -235,10 +235,19 @@ with tab_monitor:
                 # Render Campaign Plan Details
                 st.markdown("#### 📋 Compiled Campaign Lead List")
                 for i, lead in enumerate(campaign.leads, 1):
+                    # Check verification fields with safe getattr/defaults
+                    email_verified = getattr(lead, "email_verified", False)
+                    procurement_vetted = getattr(lead, "procurement_vetted", False)
+                    v_reason = getattr(lead, "verification_reason", "Unverified")
+                    
+                    v_text = "✅ Verified & Procurement Vetted (SOC2/Compliance Audit Passed)" if (email_verified and procurement_vetted) else f"⚠️ Verification Alert: {v_reason}"
+                    v_color = "green" if (email_verified and procurement_vetted) else "orange"
+                    
                     with st.expander(f"{i}. {lead.name} — {lead.role} at {lead.company}", expanded=True):
                         st.markdown(f"**Email**: {lead.email}")
                         st.markdown(f"**Business Description**: {lead.company_description}")
                         st.markdown(f"**Initial Personalization Angle**: {lead.personalized_hook}")
+                        st.markdown(f"**Compliance Vetting**: :{v_color}[{v_text}]")
                 
                 # Approval action buttons
                 col_app, col_rej = st.columns(2)
@@ -270,7 +279,18 @@ with tab_monitor:
                         elif lead.status == "needs_review":
                             status_badge = "<span class='review-badge'>NEEDS REVIEW</span>"
                         else:
-                            status_badge = "<span class='pending-badge'>PENDING</span>"
+                            status_badge = f"<span class='pending-badge'>{lead.status.upper()}</span>"
+                            
+                        # Retrieve verification metadata safely
+                        email_verified = getattr(lead, "email_verified", False)
+                        procurement_vetted = getattr(lead, "procurement_vetted", False)
+                        v_reason = getattr(lead, "verification_reason", "Unverified")
+                        
+                        v_badge_html = ""
+                        if email_verified and procurement_vetted:
+                            v_badge_html = "<span style='font-size:0.75rem; color:#2ecc71; font-weight:bold; display:block; margin-top:6px;'>✅ Deliverable & Procurement Vetted</span>"
+                        else:
+                            v_badge_html = f"<span style='font-size:0.75rem; color:#f1c40f; font-weight:bold; display:block; margin-top:6px;'>⚠️ Vetting Flag: {v_reason}</span>"
                             
                         # Highlight active lead
                         active_style = "border: 2px solid #8A2BE2;" if i == current_lead_index and lead.status == "pending" else ""
@@ -282,7 +302,8 @@ with tab_monitor:
                                 {status_badge}
                             </div>
                             <p style="font-size:0.85rem; margin-bottom:4px; color:#8E8EA0;">{lead.role} at <b>{lead.company}</b></p>
-                            <p style="font-size:0.85rem; margin:0; color:#8E8EA0;">{lead.company_description}</p>
+                            <p style="font-size:0.85rem; margin-bottom:4px; color:#8E8EA0;">{lead.company_description}</p>
+                            {v_badge_html}
                         </div>
                         """, unsafe_allow_html=True)
                 
