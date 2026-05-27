@@ -475,6 +475,43 @@
             line-height: 1.5;
         }
 
+        /* High-Throughput Ingestion & Verification Layout */
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .pipeline-card {
+            background: rgba(0, 210, 255, 0.015);
+            border: 1px solid rgba(0, 210, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .pipeline-card h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pipeline-card h4 i {
+            color: var(--accent-cyan);
+        }
+
+        .pipeline-card p {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
         /* Page Break Prevention & Premium Styling for PDF Printing */
         @media print {
             body {
@@ -521,7 +558,7 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            .solution-card, .network-node, .step-card, .challenge-box, .skill-card, .roadmap-card {
+            .solution-card, .network-node, .step-card, .challenge-box, .skill-card, .roadmap-card, .pipeline-card {
                 background: rgba(255, 255, 255, 0.015) !important;
                 border: 1px solid rgba(255, 255, 255, 0.06) !important;
                 color: var(--text-main) !important;
@@ -536,7 +573,7 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            .network-node i, .step-card i, .skill-card h4 i, .roadmap-card h4 i {
+            .network-node i, .step-card i, .skill-card h4 i, .roadmap-card h4 i, .pipeline-card h4 i {
                 color: var(--accent-cyan) !important;
             }
             .pitch-banner {
@@ -596,7 +633,7 @@
             .step-container {
                 grid-template-columns: 1fr;
             }
-            .skills-grid, .roadmap-grid, .pitch-banner {
+            .skills-grid, .roadmap-grid, .pitch-banner, .pipeline-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -708,6 +745,35 @@
                     <i class="fa-solid fa-chart-line"></i>
                     <h4>CRM Coach</h4>
                     <p>Evaluates responses, routing back if score fails threshold.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- High-Throughput Ingestion & Verification -->
+        <section class="glass-card">
+            <h2><i class="fa-solid fa-server"></i> High-Throughput Lead Verification & Ingestion Pipeline</h2>
+            <p>
+                To support enterprise-grade demand generation, the platform scales to process and verify **millions of contacts annually**, isolating tasks into high-throughput asynchronous execution branches and implementing multi-LLM data quality checks.
+            </p>
+
+            <div class="pipeline-grid">
+                <div class="pipeline-card">
+                    <h4><i class="fa-solid fa-layer-group"></i> Distributed Worker Queues</h4>
+                    <p>
+                        Bypasses HTTP gateway timeouts during deep contact enrichment cycles by decoupling requests through a <strong>GCP Pub/Sub task queue</strong>. Scales background container workers dynamically to process high-volume lists in parallel.
+                    </p>
+                </div>
+                <div class="pipeline-card">
+                    <h4><i class="fa-solid fa-shield-halved"></i> Multi-LLM AI Consensus</h4>
+                    <p>
+                        Validates lead information using a multi-LLM consensus validation loop. Runs parallel extractions across <strong>Claude 3.5</strong> (precision extraction), <strong>GPT-4o</strong> (objection vetting), and <strong>Gemini 1.5 Pro</strong> (deep-context profiling).
+                    </p>
+                </div>
+                <div class="pipeline-card">
+                    <h4><i class="fa-solid fa-rotate"></i> Idempotent CRM Sync</h4>
+                    <p>
+                        Features a transactional checkpointer (PostgreSQL Cloud SQL) ensuring database state rollback safety. Guarantees 100% idempotent updates to CRM systems, completely preventing duplicate record spikes or API rate limit lockouts.
+                    </p>
                 </div>
             </div>
         </section>

@@ -19,6 +19,9 @@ class Lead:
     personalized_hook: str = ""
     # pending → in_progress → approved | needs_review
     status: str = "pending"
+    email_verified: bool = False
+    procurement_vetted: bool = False
+    verification_reason: str = "Unverified"
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -33,6 +36,9 @@ class Lead:
             company_description=data["company_description"],
             personalized_hook=data.get("personalized_hook", ""),
             status=data.get("status", "pending"),
+            email_verified=bool(data.get("email_verified", False)),
+            procurement_vetted=bool(data.get("procurement_vetted", False)),
+            verification_reason=data.get("verification_reason", "Unverified"),
         )
 
 

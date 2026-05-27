@@ -73,6 +73,16 @@ graph TD
 
 ---
 
+## 🚀 High-Throughput Verification & Enterprise Ingestion Pipeline
+
+To support enterprise-grade demand generation, the platform scales to process and verify **millions of contacts annually**, isolating tasks into high-throughput asynchronous execution branches and implementing multi-LLM data quality checks:
+
+1. **Distributed Worker Queues (Scale & Latency)**: Bypasses HTTP gateway timeouts during deep contact enrichment cycles by decoupling requests through a **GCP Pub/Sub task queue**. Scales background container workers dynamically to process high-volume lists in parallel.
+2. **Multi-LLM AI Consensus Vetting (Quality & Accuracy)**: Validates lead information using a multi-LLM consensus validation loop. Runs parallel extractions across **Claude 3.5** (precision extraction), **GPT-4o** (objection vetting), and **Gemini 1.5 Pro** (deep-context profiling).
+3. **Idempotent CRM Synchronizer (Reliability & Safety)**: Features a transactional checkpointer (PostgreSQL Cloud SQL) ensuring database state rollback safety. Guarantees 100% idempotent updates to CRM systems, completely preventing duplicate record spikes or API rate limit lockouts.
+
+---
+
 ## 🛠️ Enterprise Engineering Challenges I Solved in Production
 
 Transitioning a complex agent network to production introduced several critical engineering hurdles. Here is how I designed around them:
