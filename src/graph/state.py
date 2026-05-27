@@ -157,6 +157,7 @@ class AgentState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
     session_id: str
     goal: str
+    total_leads_target: int
     campaign: LeadCampaign | None
     approved: bool
     current_lead_index: int
@@ -170,12 +171,14 @@ def initial_state(
     goal: str,
     session_id: str,
     lead_materials_path: str = "lead_materials/sample_profiles",
+    total_leads_target: int = 3,
 ) -> dict:
     """Create the initial state for a new lead campaign session."""
     return {
         "messages": [],
         "session_id": session_id,
         "goal": goal,
+        "total_leads_target": total_leads_target,
         "campaign": None,
         "approved": False,
         "current_lead_index": 0,

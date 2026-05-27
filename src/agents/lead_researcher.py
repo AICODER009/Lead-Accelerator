@@ -155,19 +155,26 @@ def lead_researcher_node(state: dict) -> dict:
     """
     LangGraph node: Lead Researcher
  
-    Reads:  state["goal"]
+    Reads:  state["goal"], state["total_leads_target"]
     Writes: state["campaign"], state["messages"], state["error"]
     """
     goal = state.get("goal", "").strip()
     if not goal:
         return {"error": "No lead target criteria provided."}
  
-    print(f"\n[Lead Researcher] Targeting criteria: '{goal}'")
+    target_count = state.get("total_leads_target", 3)
+    print(f"\n[Lead Researcher] Targeting criteria: '{goal}', target count: {target_count}")
  
     llm = build_researcher_llm()
     messages = [
         SystemMessage(content=RESEARCHER_SYSTEM_PROMPT),
-        HumanMessage(content=f"Create a targeted lead generation campaign list for: {goal}"),
+        HumanMessage(
+            content=(
+                f"Create a targeted lead generation campaign list for: {goal}\n"
+                f"You must generate EXACTLY {target_count} leads matching the target schema. "
+                f"Ensure the 'total_leads_target' field in the JSON is also exactly {target_count}."
+            )
+        ),
     ]
  
     print(f"[Lead Researcher] Calling {MODEL_NAME}...")

@@ -87,6 +87,12 @@ def main():
         default="data/checkpoints.db",
         help="Path to SQLite checkpoint database"
     )
+    parser.add_argument(
+        "--leads-target",
+        type=int,
+        default=3,
+        help="Number of target leads to generate (2-6)"
+    )
 
     args = parser.parse_args()
 
@@ -112,7 +118,7 @@ def main():
         format_banner("Lead Accelerator", session_id, args.goal)
         
         # Initialize campaign state
-        inputs = initial_state(goal=args.goal, session_id=session_id)
+        inputs = initial_state(goal=args.goal, session_id=session_id, total_leads_target=args.leads_target)
         result = execute_workflow(inputs, config)
 
     # Output final campaign state details

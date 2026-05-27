@@ -190,7 +190,7 @@ with tab_config:
 
     if run_btn:
         with st.spinner("Initializing campaign state in LangGraph..."):
-            inputs = initial_state(goal=goal_input, session_id=active_session_id)
+            inputs = initial_state(goal=goal_input, session_id=active_session_id, total_leads_target=leads_count)
             # Adjust campaign count directly
             inputs["campaign"] = None # Let research re-generate
             # Execute first leg of graph (runs lead_researcher and pauses on human_approval)
