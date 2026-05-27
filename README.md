@@ -1,14 +1,14 @@
 # ⚡ B2B Lead Accelerator Studio
 
-> A state-of-the-art stateful multi-agent system designed for automated, hyper-personalized B2B Sales Development Representative (SDR) campaigns, built with **LangGraph**, **Model Context Protocol (MCP)**, and **CrewAI**.
+> A state-of-the-art stateful multi-agent system designed for automated, hyper-personalized B2B Sales Development Representative (SDR) campaigns, built with **LangGraph**, **Model Context Protocol (MCP)**, **Agent-to-Agent (A2A)**, and **CrewAI**.
 
 ---
 
 ## 📖 Table of Contents
 1. [Overview](#-overview)
-2. [Core Concepts](#-core-concepts)
-3. [System Architecture](#%EF%B8%8F-system-architecture)
-4. [Agent Workflow Details](#-agent-workflow-details)
+2. [Orchestration, MCP, and A2A Protocols](#-orchestration-mcp-and-a2a-protocols)
+3. [Updated System Architecture & Flow](#-updated-system-architecture--flow)
+4. [Newly Implemented Capabilities](#-newly-implemented-capabilities)
 5. [Tech Stack](#%EF%B8%8F-tech-stack)
 6. [Prerequisites & Installation](#%EF%B8%8F-prerequisites--installation)
 7. [Configuration (`.env`)](#-configuration-env)
@@ -22,90 +22,97 @@
 
 The **B2B Lead Accelerator Studio** is a next-generation AI orchestration platform that automates the standard lifecycle of outbound sales. Unlike traditional sequential scrapers, this system leverages a stateful, event-driven graph architecture that dynamically reacts to prospect feedback, leverages microservice agent collaborations (A2A), and maintains local database-scoped persistence for Human-in-the-Loop checkpointing.
 
-### Key Capabilities:
-- **Intelligent Account Mapping**: Evaluates lead materials, company profiles, and target goals to curate high-fit lead lists.
-- **Microservice-Augmented Personalization**: Executes real-time research against case studies using dedicated agent networks.
-- **Objection Stress-Testing**: Proactively tests personalized hooks using an LLM objection simulator on port `9001` before outreach.
-- **Interactive SDR Coaching**: Provides structured feedback loop adjustments until message quality meets B2B outreach standards.
-- **Human-in-the-Loop Guardrails**: Features full state checkpointers allowing SDR managers to approve or tweak leads prior to generating value hooks.
+---
+
+## 🔌 Orchestration, MCP, and A2A Protocols
+
+To ensure modularity and transaction safety at enterprise scale, we decouple workloads using specific frameworks and standards:
+
+### 1. The Core Orchestrator: LangGraph
+*   **The Master Hub**: Runs the state graph loop (`workflow.py`). It coordinates state persistence, checkpointing, node execution sequences, and conditional retry flows.
+*   **The Nodes**: Houses key campaign milestones: `lead_researcher`, `human_approval`, `personalizer`, `objection_simulator`, and `crm_coach`.
+
+### 2. The Analytical Deep Research: CrewAI
+*   **Specialized Sub-Agents**: Operates inside the remote `sales_research_partner.py` service. It structures a dedicated multi-agent team (Research Agent & Analyst Agent) that performs deep-context ingestion, web search, and competitive profiling of target leads.
+
+### 3. Model Context Protocol (MCP)
+*   **Tool & Memory Access**: Local agents use our **Memory MCP Server** (`src/mcp_servers/memory_server.py`) to execute tool commands locally:
+    *   `tool_search_notes` & `tool_read_file`: Queries local B2B value propositions and case studies.
+    *   `tool_memory_set` & `tool_memory_get`: Saves intermediate SDR performance metrics in local thread memory.
+
+### 4. Agent-to-Agent (A2A) Protocol
+*   **Cross-Framework Coordination**: Connects our core LangGraph orchestrator with external microservices over lightweight JSON-RPC streaming sockets:
+    *   **Personalization** (Port 9002): LangGraph `Personalizer` delegates research prompts to the remote CrewAI service using A2A.
+    *   **Adversarial Objections** (Port 9001): LangGraph `Objection Simulator` delegates objection generation and response grading to a remote FastAPI Quiz service using A2A.
 
 ---
 
-## 🧠 Core Concepts
+## 🗺️ Updated System Architecture & Flow
 
-| Concept | Explanation |
-| :--- | :--- |
-| **SDR Agent** | Sales Development Representative Agent that orchestrates the prospect campaign flow. |
-| **A2A Service** | Agent-to-Agent microservices designed to handle heavy analytical sub-tasks (e.g., CrewAI research, objection simulations) over lightweight FastAPI sockets. |
-| **MCP (Model Context Protocol)** | Standardized agent-to-tool interface allowing agents to read file contents and retrieve context-scoped memory safely. |
-| **Interrupt / Checkpointing** | LangGraph State Graph feature that pauses execution state into a SQLite database, yielding control back to a human operator. |
-| **DeepEval Verification** | Production LLM unit testing framework that ensures outbound pitch quality, alignment, and hallucination-free generation using quantitative metrics. |
-
----
-
-## 🗺️ System Architecture
-
-The studio operates on a robust hub-and-spoke model where the **LangGraph Orchestrator** maintains the core transactional state, delegating specialized workloads to independent microservices and checking state against an SQLite backend.
-
-```
-                  ┌──────────────────────────────┐
-                  │   Streamlit Web Dashboard    │ (app.py)
-                  └──────────────┬───────────────┘
-                                 │ Starts / Resumes Session
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │    LangGraph Orchestrator    │ (src/graph/workflow.py)
-                  └──────────────┬───────────────┘
-                                 │
-         ┌───────────────────────┼───────────────────────┐
-         ▼                       ▼                       ▼
-┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
-│   A2A Port 9001  │    │   A2A Port 9002  │    │    MCP Server    │
-│ Objection Service│    │ Sales Research   │    │  Memory Server   │
-│  (objection.py)  │    │ Partner (CrewAI) │    │ (memory_server.py)│
-└──────────────────┘    └──────────────────┘    └──────────────────┘
-```
-
-Below is the **Premium Neon Cyberpunk Architecture Sketch** outlining the complete state transitions and agent topologies:
-
-![B2B Lead Accelerator Architecture](assets/architecture_sketch.png)
-
----
-
-## 🚶 Agent Workflow Details
-
-The system transitions statefully through five primary node types in `src/graph/workflow.py`:
+The studio operates on a robust hub-and-spoke model. Below is the complete state execution flow, highlighting the newly integrated **Lead Verification & Vetting** stage, the **Human approval Interrupt**, and the **Transactional Outbox sync**:
 
 ```mermaid
 graph TD
-    START --> LR[1. Lead Researcher Node]
-    LR --> HA[2. Human Approval Node]
-    HA -- Approved=True --> P[3. Personalizer Node]
-    HA -- Approved=False --> LR
-    P --> OS[4. Objection Simulator Node]
-    OS --> CC[5. CRM Coach Node]
-    CC -- Score < 0.5 --> P
-    CC -- Score >= 0.5 & Done --> END
+    %% Base States
+    START((1. Start Campaign)) --> LR[2. Lead Researcher Node]
+    
+    %% Vetting Sub-Loop
+    subgraph Lead Verification Pipeline
+        LR --> VL[3. verify_and_vet_lead Heuristics]
+        VL --> EM{Email MX Check}
+        VL --> PV{Procurement Audit}
+        
+        EM -->|Generic/Invalid| F1[Flag: email_verified=False]
+        EM -->|Business Domain| P1[Pass: email_verified=True]
+        
+        PV -->|High Risk/No Tech| F2[Flag: procurement_vetted=False]
+        PV -->|SOC2/B2B Aligned| P2[Pass: procurement_vetted=True]
+    end
+    
+    %% Status Assignment
+    F1 & F2 -->|Either Fails| NR[Set status = 'needs_review']
+    P1 & P2 -->|Both Pass| PE[Set status = 'pending']
+    
+    %% Human Gate
+    NR & PE --> HA[4. Human Approval Gate: st.expander]
+    
+    %% Approval Decider
+    HA -- "Re-run (resume='no')" --> LR
+    HA -- "Approved (resume='yes')" --> P[5. Grounded Personalizer Node]
+    
+    %% Personalization & Vetting Loops
+    P --> OS[6. Objection Simulator Node]
+    OS --> CC[7. CRM Coach Node]
+    
+    %% Loop Deciders
+    CC -- "Objection Score < 50%" --> P
+    CC -- "Score >= 50% & Session Complete" --> CRM[8. Idempotent CRM Sync]
+    CRM --> END((9. Campaign Complete))
+
+    %% Colors and Styling
+    classDef validation fill:#00d2ff,stroke:#333,stroke-width:2px,color:#000;
+    classDef gate fill:#f1c40f,stroke:#333,stroke-width:2px,color:#000;
+    classDef finish fill:#2ecc71,stroke:#333,stroke-width:2px,color:#000;
+    
+    class EM,PV,VL validation;
+    class HA gate;
+    class CC,CRM,END finish;
 ```
 
-### 1. Lead Researcher Node
-- Reads case materials (`lead_materials/`) and maps target profiles.
-- Validates contacts and prepares initial prospect state metadata.
+---
 
-### 2. Human Approval Node (Checkpointing Interrupt)
-- The state graph persists state and triggers an `interrupt_before`.
-- Holds the sequence until the SDR reviews and marks `approved=True` via the Streamlit interface.
+## 🚀 Newly Implemented Capabilities
 
-### 3. Personalizer Node
-- Consults the **Sales Research Partner** (Port 9002) which utilizes **CrewAI** agents to search, digest case studies, and generate deeply grounded outreach hooks tailored to the prospect's unique challenges.
+To support enterprise readiness and mimic high-throughput workflows (e.g. processing millions of contacts annually), we added two key features to the local system:
 
-### 4. Objection Simulator Node
-- Queries the **Sales Objection Simulator** (Port 9001) which acts as an adversarial prospect raising real-world sales objections (pricing, budget, timing).
-- Evaluates the resiliency of the personalized pitch.
+### 1. Automated Lead Verification & Compliance Vetting
+*   **Deliverability Validation**: Verifies lead email structure and blocks generic consumer domains (Gmail/Yahoo) to enforce strict professional B2B compliance.
+*   **Procurement Vetting**: Vets target company descriptions against standard procurement requirements (checks for SOC2/security signals and flags high-risk trade categories).
+*   **Dashboard Warnings**: Auto-flags unverified leads as `Needs Review` to halt the LangGraph before personalization, showing detailed audit logs directly inside the Streamlit control panel.
 
-### 5. CRM Coach Node
-- Evaluates simulation results and computes a readiness score.
-- Re-routes prospects back to the personalization stage if the score is subpar or completes the prospect path if it succeeds.
+### 2. Transactional Outbox Pattern Manager (`src/utils/outbox.py`)
+*   **Atomic Updates**: Writes a `CRM_SYNC` event directly into a local SQL `crm_outbox` table inside the same transaction as the agent state commits, preventing dual-write discrepancies.
+*   **Resilient Async Syncing**: An Outbox Daemon pulls pending updates and pushes them to the CRM using **exponential backoff retry policies** to bypass external API rate-limit spikes.
 
 ---
 
@@ -165,13 +172,6 @@ We provide an automated, multi-threaded system assembly runner (`run_system.py`)
 python run_system.py
 ```
 
-### What this does:
-1. Launches the **B2B Sales Objection Simulator Service** on **Port 9001**.
-2. Launches the **CrewAI Sales Research Partner Service** on **Port 9002**.
-3. Polls the microservice sockets until online.
-4. Spins up the **Streamlit Dashboard** UI on **Port 8501**.
-5. Gracefully handles `Ctrl+C` to terminate all subprocesses cleanly and free active ports.
-
 To access the Streamlit Dashboard, navigate to `http://localhost:8501`.
 
 ---
@@ -190,11 +190,6 @@ To run tests evaluating whether generated personalized hooks align accurately wi
 ```powershell
 pytest tests/test_eval.py
 ```
-
-These evaluate:
-- **Groundedness**: Ensures outreach messages only state facts derived directly from case studies.
-- **Persona Alignment**: Assesses whether simulated objections match target industry personas.
-- **Response Suitability**: Measures whether the generated SDR outreach is contextually appropriate.
 
 ---
 
