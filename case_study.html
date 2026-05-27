@@ -906,6 +906,25 @@
             </div>
         </section>
 
+        <!-- Large-Scale Enterprise Scalability Architecture Blueprint -->
+        <section class="glass-card">
+            <h2><i class="fa-solid fa-network-wired"></i> High-Scalability Enterprise Stack Architecture (8M+ Contacts/Year)</h2>
+            <p>
+                To scale this B2B Lead Accelerator to an enterprise-grade high-throughput environment, the system design transitions from single-process operations into a highly distributed, parallel microservice topology coordinated by GCP messaging channels and replicated PostgreSQL databases:
+            </p>
+
+            <div style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 24px; font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-top: 16px;">
+                <h4 style="font-family: 'Outfit', sans-serif; font-size: 15px; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-diagram-project" style="color: var(--accent-cyan);"></i> The Five Scalable Infrastructure Layers</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; padding-left: 0;">
+                    <li><strong style="color: #fff;">1. Enterprise Ingestion & Verification Layer</strong>: Employs horizontally scaled <strong>GCP Cloud Run Jobs</strong> using Token Bucket rate-limiting and rotating proxy pools to verify MX records and scrape LinkedIn data for 22,000+ prospects daily.</li>
+                    <li><strong style="color: #fff;">2. Asynchronous Event Bus</strong>: Decouples long-running multi-agent research operations out-of-band using a highly resilient <strong>GCP Pub/Sub</strong> queue, featuring a Dead Letter Queue (DLQ) for self-healing error isolation.</li>
+                    <li><strong style="color: #fff;">3. Scalable Compute & State Orchestration</strong>: Coordinated by <strong>LangGraph Orchestrator Worker Pools</strong>, scaling database checkpoints horizontally via a replicated <strong>GCP Cloud SQL (PostgreSQL)</strong> setup with <strong>PgBouncer</strong> connection poolers.</li>
+                    <li><strong style="color: #fff;">4. Decoupled Agent-to-Agent Microservices</strong>: Separates execution concerns by hosting the CrewAI Research Partner and Objection Simulator in standalone auto-scaling containers, utilizing local fine-tuned <strong>Llama-3-8B</strong> GPU models via Vertex AI to slash API token expenses.</li>
+                    <li><strong style="color: #fff;">5. Transactional Delivery & CRM Synchronization</strong>: Enforces a strict <strong>Transactional Outbox Pattern</strong> (`crm_outbox` ledger commits) inside database transaction blocks, ensuring 100% idempotent updates to HubSpot/Salesforce CRMs with exponential backoff retries.</li>
+                </ul>
+            </div>
+        </section>
+
         <!-- Key Summary Banner -->
         <section class="pitch-banner">
             <div class="pitch-content">

@@ -101,6 +101,60 @@ graph TD
 
 ---
 
+## 📈 High-Scalability Enterprise Stack Architecture (8M+ Contacts/Year)
+
+To scale this B2B Lead Accelerator to an enterprise-grade high-throughput environment, the system design transitions from single-process operations into a highly distributed, parallel microservice topology coordinated by GCP messaging channels and replicated PostgreSQL databases:
+
+```mermaid
+graph TD
+    %% Ingestion Layer
+    subgraph 1. Enterprise Ingestion & Verification Layer
+        A[High-Volume CSV / CRM Ingestion] -->|Ingest Job| B(GCP Cloud Run Job / GKE Cron)
+        B -->|Parallel Inbound Requests| C[Proxy Pool: Bright Data / ScraperAPI]
+        B -->|Deliverability Verification| D[Email MX / DNS Vetting Engine]
+        B -->|Parallel AI Vetting| E[Gemini 1.5 Pro / Claude 3.5 Haiku Consensus]
+    end
+
+    %% Messaging Queue Layer
+    subgraph 2. Asynchronous Event Bus
+        B -->|Vetted Leads JSON| F[GCP Pub/Sub / RabbitMQ Message Bus]
+        F -->|DLQ: Failed Messages| G[Dead Letter Queue / Admin Review]
+    end
+
+    %% State & Compute Layer
+    subgraph 3. Scalable Compute & State Orchestration
+        F -->|Autoscale Trigger| H(LangGraph Orchestrator Worker Pool)
+        H -->|State Checkpoints| I[PgBouncer Connection Pooler]
+        I -->|Replicated Transactions| J[(GCP Cloud SQL: PostgreSQL)]
+        H -->|Transient Session Caching| K[(Redis Distributed Cache)]
+    end
+
+    %% Agent Coordination Layer
+    subgraph 4. Decoupled Agent-to-Agent Microservices
+        H -->|A2A Port 9002| L[CrewAI Research Partner Worker Pods]
+        H -->|A2A Port 9001| M[Objection Simulator Service Pods]
+        L & M -->|Model Cascading Vertex AI| N[Vertex AI Endpoint: Local Fine-Tuned Llama-3-8B]
+    end
+
+    %% Delivery & Sync Layer
+    subgraph 5. Transactional Delivery & CRM Synchronization
+        H -->|DeepEval Vetting Passed| O[Write Outbox Entry: crm_outbox]
+        O -->|Commit Local SQL| J
+        P[Outbox Daemon Process] -->|Read Outbox| J
+        P -->|Idempotent Push| Q[HubSpot / Salesforce Webhooks]
+        Q -->|429 Rate Limit| R[Apply Exponential Backoff & Retry]
+        R --> P
+    end
+
+    style B fill:#00d2ff,stroke:#333,stroke-width:2px,color:#000
+    style F fill:#8a2be2,stroke:#333,stroke-width:2px,color:#000
+    style H fill:#ff007f,stroke:#333,stroke-width:2px,color:#000
+    style J fill:#4285f4,stroke:#333,stroke-width:2px,color:#000
+    style P fill:#2ecc71,stroke:#333,stroke-width:2px,color:#000
+```
+
+---
+
 ## 🚀 Newly Implemented Capabilities
 
 To support enterprise readiness and mimic high-throughput workflows (e.g. processing millions of contacts annually), we added two key features to the local system:
